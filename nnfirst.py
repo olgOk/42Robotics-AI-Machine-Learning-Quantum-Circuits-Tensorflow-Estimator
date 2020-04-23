@@ -45,7 +45,7 @@ def gate_data_preproc(quantum_data: dict,
                       gate_num: int) -> pd.DataFrame:
   """
   Function takes the raw data as a .json file, split the data into two parts, 
-  the first 32 columns represent state vectors the last 173 colums represent
+  the first 32 columns represent state vectors; the last 173 columns represent
   the parameters of each gate.
 
   Parameters: quantum_data: dict - the raw data read from .json file
@@ -54,18 +54,21 @@ def gate_data_preproc(quantum_data: dict,
               gate's parameters
 
   """
-  #since we care only about the value of the angles in U3 Gate, check for this type of gate
-  #if the gate is not a U3 gate, set the angle values to 0
+  # Since we care only about the value of the angles in U3 Gate, 
+  # check for this type of gate;
+  # if the gate is not a U3 gate, set the angle values to 0.
   is_not_u3gate = lambda data: data["Gate_Type"] != 'U3Gate'
   norm_data = json_normalize(quantum_data)
-  dataframe = pd.DataFrame()  #create new data table
+  
+  #create new data table
+  dataframe = pd.DataFrame()  
 
   #.loc[] - accesses a group of rows and columns by label(s) or a boolean array.
   norm_data.loc[(is_not_u3gate(norm_data), 'Angle_1')] = 0.0
   norm_data.loc[(is_not_u3gate(norm_data), 'Angle_2')] = 0.0
   norm_data.loc[(is_not_u3gate(norm_data), 'Angle_3')] = 0.0
 
-  #iterate through each subcateggory, pass if GateType or GateNumber
+  #iterate through each subcategory, pass if GateType or GateNumber
   #store in the new table 
   for key in norm_data:
     # print(key)
@@ -77,6 +80,7 @@ def gate_data_preproc(quantum_data: dict,
       # print(dataframe[key+gate_num])
 
   return dataframe
+
 
 norm_qdata = json_normalize(quantum_data['statevector'])
 # print(qdata.head())
@@ -94,7 +98,7 @@ for key in quantum_data:
 norm_qdata
 # display.display(norm_qdata)
 
-#analize features
+#analyze features
 print(norm_qdata.columns)
 
 #describe data
